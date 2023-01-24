@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
 // Routes de l'API
-app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 
 
 module.exports = app;

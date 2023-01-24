@@ -18,7 +18,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(PORT || '3001');
+const port = normalizePort(PORT || '5000');
 app.set('port', port);
 
 // Gestion des erreurs

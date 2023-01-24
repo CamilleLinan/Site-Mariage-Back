@@ -3,11 +3,11 @@ const uniqueValidator = require('mongoose-unique-validator');
 const { isEmail } = require('validator');
 
 const userSchema = mongoose.Schema({
-    firstname: { 
+    lastname: { 
         type: String, 
         required: true, 
         trim: true },
-    lastname: { 
+    firstname: { 
         type: String, 
         required: true, 
         trim: true },
@@ -22,7 +22,8 @@ const userSchema = mongoose.Schema({
         required: true, 
         trim: true },
     isAdmin: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
 });
 

@@ -18,11 +18,11 @@ exports.signup = async (req, res) => {
         bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
-                firstname: req.body.firstname,
                 lastname: req.body.lastname,
+                firstname: req.body.firstname,
                 email: req.body.email,
                 password: hash,
-                isAdmin: false,
+                isAdmin: req.body.isAdmin
             });
             user.save()
                 .then((user) => res.status(201).json({ userId: user._id, message: 'Utilisateur créé !' }))
