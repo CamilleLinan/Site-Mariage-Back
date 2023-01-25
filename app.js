@@ -26,6 +26,6 @@ app.use(express.urlencoded({extended:false}));
 // Routes de l'API
 app.use('/api/users', userRoutes);
 app.use('/api/articles', articleRoutes);
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
