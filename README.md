@@ -1,4 +1,4 @@
-# Projet-7-Groupomania-Back développé avec Node.js, express.js, et MongoDB Atlas.
+# Site-Mariage-Back développé avec Node.js, express.js, et MongoDB Atlas.
 
 · Télécharger ' NodeJS ' si besoin ;
 
