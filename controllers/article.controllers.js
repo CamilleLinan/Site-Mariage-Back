@@ -6,13 +6,13 @@ exports.createArticle = (req, res) => {
     const articleObject = req.file ? {
         articlePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
-    const userId = req.body.userId
+    delete articleObject.userId;
     const title = req.body.title
     const description = req.body.description;
 
     const article = new Article({
         ...articleObject,
-        userId,
+        userId: req.auth.userId,
         title,
         description
     });
@@ -42,9 +42,10 @@ exports.updateArticle = (req, res) => {
         articlePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
 
+    delete articleObject.userId;
     Article.findOne({ _id: req.params.id })
         .then(article => {
-            if (article.userId != req.auth.userId) {
+            if (article.userId !== req.auth.userId) {
                 res.status(401).json({ message: 'Non autorisé' });
             } else {
                 if (article.articlePicture && req.file) {
@@ -68,7 +69,7 @@ exports.updateArticle = (req, res) => {
 exports.deleteArticle = (req, res, next) => {
     Article.findOne({ _id: req.params.id })
         .then(article => {
-            if (article.userId != req.auth.userId) {
+            if (article.userId !== req.auth.userId) {
                 res.status(401).json({ message: 'Non autorisé' });
             } else {
                 const filename = article.articlePicture.split('/images')[1];
