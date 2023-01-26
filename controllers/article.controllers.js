@@ -4,7 +4,7 @@ const fs = require('fs');
 // Créer un article
 exports.createArticle = (req, res) => {
     const articleObject = req.file ? {
-        articlePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
     delete articleObject.userId;
     const title = req.body.title
@@ -39,7 +39,7 @@ exports.getOneArticle = (req, res, next) => {
 // Éditer un article
 exports.updateArticle = (req, res) => {
     const articleObject = req.file ? {
-        articlePicture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
 
     delete articleObject.userId;
@@ -48,8 +48,8 @@ exports.updateArticle = (req, res) => {
             if (article.userId !== req.auth.userId) {
                 res.status(401).json({ message: 'Non autorisé' });
             } else {
-                if (article.articlePicture && req.file) {
-                    const filename = article.articlePicture.split('/images')[1];
+                if (article.picture && req.file) {
+                    const filename = article.picture.split('/images')[1];
                     fs.unlink(`images/${filename}`, () => {
                         Article.findOneAndUpdate({ _id: req.params.id }, { ...articleObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
                         .then((article) => res.status(200).json(article))
@@ -72,7 +72,7 @@ exports.deleteArticle = (req, res, next) => {
             if (article.userId !== req.auth.userId) {
                 res.status(401).json({ message: 'Non autorisé' });
             } else {
-                const filename = article.articlePicture.split('/images')[1];
+                const filename = article.picture.split('/images')[1];
                 fs.unlink(`images/${filename}`, () => {
                     Article.deleteOne({ _id: req.params.id })
                         .then(() => res.status(200).json({ message: 'Article supprimé !' }))
