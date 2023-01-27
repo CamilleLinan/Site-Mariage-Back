@@ -3,23 +3,27 @@ const fs = require('fs');
 
 // Créer un article
 exports.createArticle = (req, res) => {
-    const articleObject = req.file ? {
-        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
-    delete articleObject.userId;
-    const title = req.body.title
-    const description = req.body.description;
+    if (req.body.isAdmin === false) {
+        res.status(401).json({ message: 'Non autorisé' });
+    } else {
+        const articleObject = req.file ? {
+            picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body };
+        delete articleObject.userId;
+        const title = req.body.title
+        const description = req.body.description;
 
-    const article = new Article({
-        ...articleObject,
-        userId: req.auth.userId,
-        title,
-        description
-    });
+        const article = new Article({
+            ...articleObject,
+            userId: req.auth.userId,
+            title,
+            description
+        });
 
-    article.save()
-        .then((article) => res.status(201).json({ article }))
-        .catch(error => res.status(400).json({ error }));
+        article.save()
+            .then((article) => res.status(201).json({ article }))
+            .catch(error => res.status(400).json({ error }));
+    }
 };
 
 // Récupérer tous les articles
@@ -45,7 +49,7 @@ exports.updateArticle = (req, res) => {
     delete articleObject.userId;
     Article.findOne({ _id: req.params.id })
         .then(article => {
-            if (article.userId !== req.auth.userId) {
+            if (article.userId !== req.auth.userId && req.body.isAdmin === false) {
                 res.status(401).json({ message: 'Non autorisé' });
             } else {
                 if (article.picture && req.file) {
@@ -69,7 +73,7 @@ exports.updateArticle = (req, res) => {
 exports.deleteArticle = (req, res) => {
     Article.findOne({ _id: req.params.id })
     .then(article => {
-        if (article.userId !== req.auth.userId) {
+        if (article.userId !== req.auth.userId && req.body.isAdmin === false) {
             res.status(401).json({ message: 'Non autorisé' });
         } else {
             if (article.picture) {
