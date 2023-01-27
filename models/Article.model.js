@@ -4,7 +4,7 @@ const articleSchema = mongoose.Schema ({
     userId: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    articlePicture: { type: String, required: false },
+    picture: { type: String, required: false },
     likes: { type: Number, required: false, default: 0 },
     usersLiked: { type: [String], required: false },
 }, {timestamps: true});
