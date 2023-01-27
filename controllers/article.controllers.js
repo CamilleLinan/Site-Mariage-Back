@@ -66,19 +66,25 @@ exports.updateArticle = (req, res) => {
 };
 
 // Supprimer un article
-exports.deleteArticle = (req, res, next) => {
+exports.deleteArticle = (req, res) => {
     Article.findOne({ _id: req.params.id })
-        .then(article => {
-            if (article.userId !== req.auth.userId) {
-                res.status(401).json({ message: 'Non autorisé' });
-            } else {
+    .then(article => {
+        if (article.userId !== req.auth.userId) {
+            res.status(401).json({ message: 'Non autorisé' });
+        } else {
+            if (article.picture) {
                 const filename = article.picture.split('/images')[1];
                 fs.unlink(`images/${filename}`, () => {
-                    Article.deleteOne({ _id: req.params.id })
-                        .then(() => res.status(200).json({ message: 'Article supprimé !' }))
-                        .catch(error => res.status(400).json({ error }));
+                Article.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Article supprimé !' }))
+                    .catch(error => res.status(400).json({ error })); 
                 });
+            } else {
+                Article.deleteOne({ _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Article supprimé !' }))
+                    .catch(error => res.status(400).json({ error }));
             }
-        })
-        .catch(error => res.status(404).json({ error }))
+        }
+    })
+    .catch(error => res.status(404).json({ error }))
 };
