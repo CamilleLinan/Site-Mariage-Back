@@ -9,5 +9,6 @@ router.post('/', auth, guestCtrl.createGuest);
 router.get('/', auth, guestCtrl.getAllGuests);
 router.get('/:id', auth, guestCtrl.getOneGuest);
 router.put('/:id', auth, guestCtrl.updateGuest);
+router.delete('/:id', auth, guestCtrl.deleteGuest);
 
 module.exports = router;

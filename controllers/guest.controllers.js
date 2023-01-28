@@ -27,7 +27,7 @@ exports.getOneGuest = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };
 
-// Éditer un article
+// Éditer un invité
 exports.updateGuest = (req, res) => {
     const guestObject = { ...req.body }
 
@@ -35,3 +35,18 @@ exports.updateGuest = (req, res) => {
         .then((guest) => res.status(200).json(guest))
         .catch((error) => res.status(400).json(error));
 }
+
+// Supprimer un invité
+exports.deleteGuest = (req, res) => {
+    Guest.findOne({ _id: req.params.id })
+    .then(guest => {
+        if (guest.userId !== req.auth.userId && req.body.isAdmin === false) {
+            res.status(401).json({ message: 'Non autorisé⸱e' });
+        } else {
+            Guest.deleteOne({ _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Invité⸱e supprimé⸱e !' }))
+                .catch(error => res.status(400).json({ error }));
+        }
+    })
+    .catch(error => res.status(404).json({ error }))
+};
