@@ -2,7 +2,8 @@ const Guest = require('../models/Guest.model');
 
 // Créer un invité
 exports.createGuest = (req, res) => {
-    const guestObject = { ...req.body }
+    const guestObject = { ...req.body };
+
     const guest = new Guest({
         ...guestObject
     })
@@ -25,3 +26,12 @@ exports.getOneGuest = (req, res, next) => {
         .then(guest => res.status(200).json(guest))
         .catch(error => res.status(404).json({ error }));
 };
+
+// Éditer un article
+exports.updateGuest = (req, res) => {
+    const guestObject = { ...req.body }
+
+    Guest.findOneAndUpdate({ _id: req.params.id }, { ...guestObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
+        .then((guest) => res.status(200).json(guest))
+        .catch((error) => res.status(400).json(error));
+}
