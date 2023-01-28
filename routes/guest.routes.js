@@ -11,4 +11,7 @@ router.get('/:id', auth, guestCtrl.getOneGuest);
 router.put('/:id', auth, guestCtrl.updateGuest);
 router.delete('/:id', auth, guestCtrl.deleteGuest);
 
+router.get('/:lastname/:firstname', auth, guestCtrl.findSelf);
+router.patch('/:lastname/:firstname', auth, guestCtrl.updateSelf);
+
 module.exports = router;

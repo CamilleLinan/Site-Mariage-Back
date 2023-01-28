@@ -12,8 +12,8 @@ const guestSchema = mongoose.Schema ({
     willBePresent: {
         type: String,
         required: true,
-        possibleValues: ['Oui', 'Non', 'Ne sait pas encore'],
-        default: 'Ne sait pas encore'
+        possibleValues: ['Confirmée', 'En attente', 'Annulée'],
+        default: 'En attente'
     } 
 })
 
