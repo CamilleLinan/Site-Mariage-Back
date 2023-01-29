@@ -12,7 +12,7 @@ const User = require('../models/User.model');
 const dotenv = require('dotenv');
 dotenv.config();
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
-const EMAIL_SERVICE = process.env.EMAIL_SERVICE
+const EMAIL_HOST = process.env.EMAIL_HOST;
 const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
@@ -119,10 +119,15 @@ exports.updatePassword = async (req, res) => {
 
 // Envoyer un email
 const transporter = nodemailer.createTransport({
-    service: EMAIL_SERVICE,
+    host: EMAIL_HOST,
+    secureConnection: false,
+    port: '587',
     auth: {
       user: EMAIL_USERNAME,
       pass: EMAIL_PASSWORD
+    },
+    tls: {
+        rejectUnauthorized: false,
     }
 });
 
