@@ -18,5 +18,6 @@ router.get('/:id', auth, userCtrl.getOneUser);
 router.put('/:id', auth, userCtrl.updateUser);
 router.put('/:id/password', auth, userCtrl.updatePassword);
 
+router.post('/sendMail', auth, userCtrl.sendMail);
 
 module.exports = router;

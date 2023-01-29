@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const emailValidator = require('email-validator');
 const { signUpErrors } = require('../utils/errors.utils');
+const nodemailer = require('nodemailer');
 
 // Import du model User
 const User = require('../models/User.model');
@@ -11,6 +12,9 @@ const User = require('../models/User.model');
 const dotenv = require('dotenv');
 dotenv.config();
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
+const EMAIL_SERVICE = process.env.EMAIL_SERVICE
+const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
 // Créer un compte utilisateur
 exports.signup = async (req, res) => {
@@ -111,4 +115,30 @@ exports.updatePassword = async (req, res) => {
 
     user.save();
     res.status(200).send(user)
+};
+
+// Envoyer un email
+const transporter = nodemailer.createTransport({
+    service: EMAIL_SERVICE,
+    auth: {
+      user: EMAIL_USERNAME,
+      pass: EMAIL_PASSWORD
+    }
+});
+
+exports.sendMail = (req, res) => {
+    const mailOptions = {
+        from: req.body.email,
+        to: EMAIL_USERNAME,
+        subject: req.body.subject,
+        text: req.body.message
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        res.status(500).send(error);
+    } else {
+        res.status(200).send('Email sent: ' + info.response);
+    }
+    });
 };
