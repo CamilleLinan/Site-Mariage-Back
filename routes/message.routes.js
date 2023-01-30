@@ -10,5 +10,6 @@ const messageCtrl = require('../controllers/message.controllers');
 // Message routes
 router.get('/', auth, messageCtrl.getAllMessages);
 router.post('/', auth, messageCtrl.createMessage);
+router.get('/:lastname/:firstname', auth, messageCtrl.findOwnMessages);
 
 module.exports = router;

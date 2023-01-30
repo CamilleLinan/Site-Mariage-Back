@@ -52,7 +52,8 @@ exports.deleteGuest = (req, res) => {
 };
 
 exports.findSelf = (req, res) => {
-    // Recherchez le Guest dans la base de données en utilisant les paramètres de requête lastname et firstname
+    // Récupérer l'invité correspondant à l'utilisateur dans la bdd en utilisant 
+    // les paramètres de requête lastname et firstname
     const lastname = req.params.lastname;
     const firstname = req.params.firstname;
     Guest.findOne({ lastname: lastname, firstname: firstname }, function(err, guest) {

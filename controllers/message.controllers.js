@@ -20,3 +20,17 @@ exports.getAllMessages = (req, res) => {
         .catch(error => res.status(404).json({ error }));
     
 };
+
+exports.findOwnMessages = (req, res) => {
+    // Récupérer le(s) message(s) de l'utilisateur dans la bdd en utilisant 
+    // les paramètres de requête lastname et firstname
+    const lastname = req.params.lastname;
+    const firstname = req.params.firstname;
+    Message.find({ lastname: lastname, firstname: firstname }, function(err, message) {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        res.send(message);
+      }
+    });
+}
