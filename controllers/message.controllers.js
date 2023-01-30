@@ -21,16 +21,25 @@ exports.getAllMessages = (req, res) => {
     
 };
 
+// Récupérer le(s) message(s) de l'utilisateur dans la bdd en utilisant 
+// les paramètres de requête lastname et firstname
 exports.findOwnMessages = (req, res) => {
-    // Récupérer le(s) message(s) de l'utilisateur dans la bdd en utilisant 
-    // les paramètres de requête lastname et firstname
     const lastname = req.params.lastname;
     const firstname = req.params.firstname;
+    
     Message.find({ lastname: lastname, firstname: firstname }, function(err, message) {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.send(message);
-      }
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(message);
+        }
     });
+}
+
+exports.replyMessage = (req, res) => {
+    const messageObject = { ...req.body }
+
+    Message.findOneAndUpdate({ _id: req.params.id }, { ...messageObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
+        .then((message) => res.status(200).json(message))
+        .catch((error) => res.status(400).json(error));
 }
