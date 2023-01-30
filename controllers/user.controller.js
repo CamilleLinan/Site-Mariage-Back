@@ -116,34 +116,3 @@ exports.updatePassword = async (req, res) => {
     user.save();
     res.status(200).send(user)
 };
-
-// Envoyer un email
-const transporter = nodemailer.createTransport({
-    host: EMAIL_HOST,
-    secureConnection: false,
-    port: '587',
-    auth: {
-      user: EMAIL_USERNAME,
-      pass: EMAIL_PASSWORD
-    },
-    tls: {
-        rejectUnauthorized: false,
-    }
-});
-
-exports.sendMail = (req, res) => {
-    const mailOptions = {
-        from: req.body.email,
-        to: EMAIL_USERNAME,
-        subject: req.body.subject,
-        text: req.body.message
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        res.status(500).send(error);
-    } else {
-        res.status(200).send('Email sent: ' + info.response);
-    }
-    });
-};

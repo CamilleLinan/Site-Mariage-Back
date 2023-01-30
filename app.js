@@ -8,6 +8,7 @@ const mongodb = require('./db');
 const userRoutes = require('./routes/user.routes');
 const articleRoutes = require('./routes/article.routes');
 const guestRoutes = require('./routes/guest.routes');
+const messageRoutes = require('./routes/message.routes');
 
 // Création de l'application avec express
 const app = express();
@@ -28,6 +29,7 @@ app.use(express.urlencoded({extended:false}));
 app.use('/api/users', userRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/guests', guestRoutes);
+app.use('/api/messages', messageRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;
