@@ -36,7 +36,17 @@ exports.findOwnMessages = (req, res) => {
     });
 }
 
+// Répondre à un message
 exports.replyMessage = (req, res) => {
+    const messageObject = { ...req.body }
+
+    Message.findOneAndUpdate({ _id: req.params.id }, { ...messageObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
+        .then((message) => res.status(200).json(message))
+        .catch((error) => res.status(400).json(error));
+}
+
+
+exports.readMessage = (req, res) => {
     const messageObject = { ...req.body }
 
     Message.findOneAndUpdate({ _id: req.params.id }, { ...messageObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
