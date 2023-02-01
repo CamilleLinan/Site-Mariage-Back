@@ -12,6 +12,6 @@ router.get('/', auth, messageCtrl.getAllMessages);
 router.post('/', auth, messageCtrl.createMessage);
 router.get('/:lastname/:firstname', auth, messageCtrl.findOwnMessages);
 router.put('/:id', auth, messageCtrl.replyMessage);
-router.post('/:id', auth, messageCtrl.readMessage);
+router.put('/:id', auth, messageCtrl.readMessage);
 
 module.exports = router;

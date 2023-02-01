@@ -22,7 +22,8 @@ const messageSchema = mongoose.Schema ({
         required: true, 
         trim: true },
     response: {
-        type: String, 
+        type: String,
+        default: '',  
         required: false },
     isRead: {
         type: Boolean,
