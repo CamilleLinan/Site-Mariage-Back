@@ -15,41 +15,63 @@ exports.createMessage = (req, res) => {
 
 // Récupérer les messages
 exports.getAllMessages = (req, res) => {
-    Message.find()
-        .then(message => res.status(200).json(message))
+    Message.aggregate([
+        {"$lookup": {
+            "from": "users",
+            "localField": "posterId",
+            "foreignField": "_id",
+            "as": "User"
+        }},
+    ]).sort({messageNumber:-1})
+        .then(messages => res.status(200).json(messages))
         .catch(error => res.status(404).json({ error }));
-    
 };
 
-// Récupérer le(s) message(s) de l'utilisateur dans la bdd en utilisant 
-// les paramètres de requête lastname et firstname
+// Retrouver ses propres messages
 exports.findOwnMessages = (req, res) => {
-    const lastname = req.params.lastname;
-    const firstname = req.params.firstname;
-    
-    Message.find({ lastname: lastname, firstname: firstname }, function(err, message) {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.send(message);
-        }
-    });
-}
+    const userId = req.params.userId;
+
+    Message.find({ posterId: userId })
+        .then(messages => {
+            res.status(200).json({ messages });
+        })
+        .catch(error => {
+            res.status(400).json({ error });
+        });
+};
 
 // Répondre à un message
 exports.replyMessage = (req, res) => {
-    const messageObject = { ...req.body }
-
-    Message.findOneAndUpdate({ _id: req.params.id }, { ...messageObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
-        .then((message) => res.status(200).json(message))
-        .catch((error) => res.status(400).json(error));
+    Message.findByIdAndUpdate(
+        req.params.id,
+        { $set: { 
+            "response.text": req.body.response.text, 
+            "response.isRead": req.body.response.isRead,
+            isRead: true } },
+        { returnOriginal: false }
+      )
+        .then(message => res.status(200).json(message))
+        .catch(error => res.status(400).json(error));
 }
 
-
+// Indiquer que le message est lu
 exports.readMessage = (req, res) => {
-    const messageObject = { ...req.body }
+    Message.findByIdAndUpdate(
+        req.params.id,
+        { $set: { isRead: req.body.isRead } },
+        { returnOriginal: false }
+      )
+        .then(message => res.status(200).json(message))
+        .catch(error => res.status(400).json(error));
+}
 
-    Message.findOneAndUpdate({ _id: req.params.id }, { ...messageObject, ...req.body, _id: req.params.id }, { returnOriginal: false })
-        .then((message) => res.status(200).json(message))
-        .catch((error) => res.status(400).json(error));
+// Indiquer que la réponse est lue
+exports.readResponse = (req, res) => {
+    Message.findByIdAndUpdate(
+        req.params.id,
+        { $set: { "response.isRead": req.body.response.isRead } },
+        { returnOriginal: false }
+      )
+        .then(message => res.status(200).json(message))
+        .catch(error => res.status(400).json(error));
 }

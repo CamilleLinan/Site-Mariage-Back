@@ -8,10 +8,11 @@ const auth = require('../middlewares/auth.middleware');
 const messageCtrl = require('../controllers/message.controllers');
 
 // Message routes
-router.get('/', auth, messageCtrl.getAllMessages);
 router.post('/', auth, messageCtrl.createMessage);
-router.get('/:lastname/:firstname', auth, messageCtrl.findOwnMessages);
-router.put('/:id', auth, messageCtrl.replyMessage);
-router.put('/:id', auth, messageCtrl.readMessage);
+router.get('/', auth, messageCtrl.getAllMessages);
+router.get('/:userId', auth, messageCtrl.findOwnMessages);
+router.patch('/:id', auth, messageCtrl.replyMessage);
+router.patch('/:id/msgIsRead', auth, messageCtrl.readMessage);
+router.patch('/:id/resIsRead', auth, messageCtrl.readResponse);
 
 module.exports = router;

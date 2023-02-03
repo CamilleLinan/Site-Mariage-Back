@@ -1,34 +1,35 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const messageSchema = mongoose.Schema ({
-    lastname: { 
-        type: String, 
-        required: true, 
-        trim: true },
-    firstname: { 
-        type: String, 
-        required: true, 
-        trim: true },
-    email: { 
-        type: String, 
-        required: true, 
-        trim: true },
+const messageSchema = Schema({
+    posterId: {
+        type: Schema.Types.ObjectId,
+        ref: 'users', 
+        required: true
+    },
     object: {
         type: String, 
         required: true, 
-        trim: true },
+        trim: true 
+    },
     message: {
         type: String, 
         required: true, 
-        trim: true },
+        trim: true 
+    },
     response: {
-        type: String,
-        default: '',  
-        required: false },
+        type: Schema.Types.Mixed,
+        default: {
+            text: '',
+            isRead: true 
+        },  
+        required: false 
+    },
     isRead: {
         type: Boolean,
         default: false,
-        required: false }
+        required: false 
+    }
 }, {timestamps: true})
 
 module.exports = mongoose.model('Message', messageSchema);
